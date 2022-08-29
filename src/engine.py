@@ -127,6 +127,8 @@ for epoch in range(NUM_EPOCHS):
 
         plt.gcf().set_size_inches(15, 12)
         plt.savefig(f"{OUT_DIR}/train_val_loss_history_{epoch + 1}.png")
+        plt.close()
+        
         print("SAVING PLOT COMPLETE...\n")
 
 
@@ -143,6 +145,7 @@ for epoch in range(NUM_EPOCHS):
 
         plt.gcf().set_size_inches(15, 12)
         plt.savefig(f"{OUT_DIR}/train_val_loss_history_{epoch + 1}_final.png")
+        plt.close()
 
         print("SAVING FINAL MODEL AND PLOT COMPLETE...\n")
 
