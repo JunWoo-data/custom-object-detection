@@ -1,6 +1,12 @@
 # %%
+import os, sys
+
+os.chdir("/root/custom-object-detection/src")
+os.getcwd()
+
+# %%
 from datasets import train_loader, valid_loader
-from config import DEVICE, NUM_CLASSES, OUT_DIR, SAVE_MODEL_EPOCH, SAVE_PLOTS_EPOCH
+from config import DEVICE, NUM_EPOCHS, NUM_CLASSES, OUT_DIR, SAVE_MODEL_EPOCH, SAVE_PLOTS_EPOCH
 from utils import Averager
 from model import create_model
 
@@ -89,7 +95,6 @@ valid_loss_history = Averager()
 
 MODEL_NAME = "Fast-RCNN"
 # %%
-NUM_EPOCHS = 2
 for epoch in range(NUM_EPOCHS):
     print(f"======== EPOCH {epoch + 1} of {NUM_EPOCHS} ========")
 
