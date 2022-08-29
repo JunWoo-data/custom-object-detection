@@ -2,7 +2,7 @@
 import torch
 from torch.utils.data import Dataset, DataLoader
 from config import TRAIN_DIR, VALID_DIR, CLASSES, BATCH_SIZE
-from utils import collate_fn
+from utils import collate_fn, get_train_transform, get_valid_transform
 import glob as glob
 import cv2
 import os, sys
@@ -66,6 +66,13 @@ class CustomImageDatasets(Dataset):
         target["image_id"] = image_id
         target["boxes"] = boxes
         target["labels"] = labels
+        
+        if self.transforms:
+            sample = self.transforms(image = image_resized,
+                                     bboxes = target["boxes"],
+                                     labels = labels)
+            image_resized = sample["image"]
+            target["boxes"] = torch.Tensor(sample["bboxes"])
 
         
         return image_resized, target
@@ -182,8 +189,8 @@ class CustomImageDatasets(Dataset):
 #     def __len__(self):
 #         return len(self.all_images)
 # %%
-train_dataset = CustomImageDatasets(TRAIN_DIR, CLASSES)
-valid_dataset = CustomImageDatasets(VALID_DIR, CLASSES)
+train_dataset = CustomImageDatasets(TRAIN_DIR, CLASSES, get_train_transform())
+valid_dataset = CustomImageDatasets(VALID_DIR, CLASSES, get_valid_transform())
 
 # %%
 train_loader = DataLoader(
@@ -205,4 +212,9 @@ valid_loader = DataLoader(
 # %%
 print(f"Number of training samples: {len(train_dataset)}")
 print(f"Number of validation samples: {len(valid_dataset)}\n")
+# %%
+
+import os, sys
+
+os.chdir('/root/custom-object-detection/src')
 # %%
