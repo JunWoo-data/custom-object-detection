@@ -131,6 +131,8 @@ for epoch in range(NUM_EPOCHS):
 
 
     if (epoch + 1) == NUM_EPOCHS:
+        torch.save(model.state_dict(), f"{OUT_DIR}/model_{epoch + 1}_final.pth")
+        
         axs[0].plot(train_loss_list, color = "blue")
         axs[0].set_xlabel("Iterations")
         axs[0].set_ylabel("Train loss")
