@@ -106,7 +106,7 @@ for epoch in range(NUM_EPOCHS):
     valid_loss_list = validate(valid_loader, model)
 
     print(f"Epoch #{epoch} train loss: {train_loss_history.value:.3f}")   
-    print(f"Epoch #{epoch} validation loss: {train_loss_history.value:.3f}") 
+    print(f"Epoch #{epoch} validation loss: {valid_loss_history.value:.3f}") 
     end = time.time()
     print(f"Took {((end - start) / 60):.3f} minutes for epoch {epoch}")
     
