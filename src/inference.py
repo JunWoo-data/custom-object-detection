@@ -69,6 +69,3 @@ for i in range(len(test_images)):
     print(f"Image {i + 1} done...")
     print("-"*50)
 print("TEST PREDICTIon COMPLETE")
-# %%
-os.getcwd()
-# %%
