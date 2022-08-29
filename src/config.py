@@ -8,6 +8,7 @@ DEVICE = torch.device('cuda') if torch.cuda.is_available() else torch.device('cp
 
 TRAIN_DIR = "../data/train"
 VALID_DIR = "../data/valid"
+TEST_DIR = "../data/test"
 OUT_DIR = "../outputs"
 
 SAVE_PLOTS_EPOCH = 10 # save loss plots after these many epochs
