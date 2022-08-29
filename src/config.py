@@ -1,6 +1,6 @@
 import torch
 
-BATCH_SIZE = 1
+BATCH_SIZE = 4
 RESIZE_TO = 512
 NUM_EPOCHS = 100
 
