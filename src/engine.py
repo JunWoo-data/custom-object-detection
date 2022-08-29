@@ -98,6 +98,8 @@ MODEL_NAME = "Fast-RCNN"
 for epoch in range(NUM_EPOCHS):
     print(f"======== EPOCH {epoch + 1} of {NUM_EPOCHS} ========")
 
+    fig, axs = plt.subplots(2, 1)
+    
     train_loss_history.reset()
     valid_loss_history.reset()
 
@@ -115,23 +117,29 @@ for epoch in range(NUM_EPOCHS):
         print("SAVING MODEL COMPLETE...\n")
 
     if (epoch + 1) % SAVE_PLOTS_EPOCH == 0:
-        plt.plot(train_loss_list, color = "blue", label = "train")
-        plt.plot(valid_loss_list, color = "red", label = "valid")
-        plt.xlabel("iterations")
-        plt.ylabel("loss")
-        plt.legend(loc = "upper right")
+        axs[0].plot(train_loss_list, color = "blue")
+        axs[0].set_xlabel("Iterations")
+        axs[0].set_ylabel("Train loss")
+
+        axs[1].plot(valid_loss_list, color = "red")  
+        axs[1].set_xlabel("Iterations")
+        axs[1].set_ylabel("Valid loss")
+
+        plt.gcf().set_size_inches(15, 12)
         plt.savefig(f"{OUT_DIR}/train_val_loss_history_{epoch + 1}.png")
         print("SAVING PLOT COMPLETE...\n")
 
 
     if (epoch + 1) == NUM_EPOCHS:
-        torch.save(model.state_dict(), f"{OUT_DIR}/model_{epoch+1}_final.pth")
+        axs[0].plot(train_loss_list, color = "blue")
+        axs[0].set_xlabel("Iterations")
+        axs[0].set_ylabel("Train loss")
 
-        plt.plot(train_loss_list, color = "blue", label = "train")
-        plt.plot(valid_loss_list, color = "red", label = "valid")
-        plt.xlabel("iterations")
-        plt.ylabel("loss")
-        plt.legend(loc = "upper right")
+        axs[1].plot(valid_loss_list, color = "red")  
+        axs[1].set_xlabel("Iterations")
+        axs[1].set_ylabel("Valid loss")
+
+        plt.gcf().set_size_inches(15, 12)
         plt.savefig(f"{OUT_DIR}/train_val_loss_history_{epoch + 1}_final.png")
 
         print("SAVING FINAL MODEL AND PLOT COMPLETE...\n")
