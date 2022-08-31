@@ -32,7 +32,7 @@ def train(train_loader, model):
         optimizer.zero_grad()
         images, targets = data
 
-        images = [torch.from_numpy(image).to(DEVICE) for image in images]
+        images = [image.to(DEVICE) for image in images]
         targets = [{k: v.to(DEVICE) for k, v in t.items()} for t in targets]
 
         # losses for classifer, box regression, objectness, brpn box regression
@@ -63,7 +63,7 @@ def validate(valid_loader, model):
     for i, data in enumerate(prog_bar):
         images, targets = data
 
-        images = [torch.from_numpy(image).to(DEVICE) for image in images]
+        images = [image.to(DEVICE) for image in images]
         targets = [{k: v.to(DEVICE) for k, v in t.items()} for t in targets]
 
         # losses for classifer, box regression, objectness, brpn box regression

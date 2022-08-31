@@ -1,7 +1,7 @@
 # %%
 import torch
 from torch.utils.data import Dataset, DataLoader
-from config import TRAIN_DIR, VALID_DIR, CLASSES, BATCH_SIZE
+from config import TRAIN_DIR, VALID_DIR, CLASSES, BATCH_SIZE, RESIZE_TO
 from utils import collate_fn, get_train_transform, get_valid_transform
 import glob as glob
 import cv2
@@ -13,10 +13,12 @@ from xml.etree import ElementTree as et
 
 # %%
 class CustomImageDatasets(Dataset):
-    def __init__(self, data_dir, classes, transforms = None):
+    def __init__(self, data_dir, classes, width, height, transforms = None):
         self.data_dir = data_dir
         self.classes = classes
         self.transforms = transforms
+        self.width = width
+        self.height = height
 
         self.image_dir_list = glob.glob(f"{self.data_dir}/*.jpg")
         self.all_images = [image_dir.split('/')[-1] for image_dir in self.image_dir_list]
@@ -28,9 +30,9 @@ class CustomImageDatasets(Dataset):
         image_dir = os.path.join(self.data_dir, image_name)
         image = cv2.imread(image_dir)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB).astype(np.float32)
-        # image_resized = cv2.resize(image, (self.width, self.height))
+        image_resized = cv2.resize(image, (self.width, self.height))
         # TODO: check why this is needed
-        image = image.transpose((2, 0, 1))
+        image_resized = image_resized.transpose((2, 0, 1))
         image_resized = image/255.0
 
         # get label
@@ -42,6 +44,10 @@ class CustomImageDatasets(Dataset):
 
         boxes = []
         labels = []
+        
+        image_width = image.shape[1]
+        image_height = image.shape[0]
+        
         for obj in root.findall("object"):
             labels.append(self.classes.index(obj.find("name").text)) 
 
@@ -50,13 +56,13 @@ class CustomImageDatasets(Dataset):
             ymin = int(obj.find("bndbox").find("ymin").text)
             ymax = int(obj.find("bndbox").find("ymax").text)
 
-            # xmin_final = (xmin/image_width)*self.width
-            # xmax_final = (xmax/image_width)*self.width
-            # ymin_final = (ymin/image_height)*self.height
-            # yamx_final = (ymax/image_height)*self.height
+            xmin_final = (xmin/image_width)*self.width
+            xmax_final = (xmax/image_width)*self.width
+            ymin_final = (ymin/image_height)*self.height
+            ymax_final = (ymax/image_height)*self.height
             # TODO: check why this is needed
 
-            boxes.append([xmin, ymin, xmax, ymax])
+            boxes.append([xmin_final, ymin_final, xmax_final, ymax_final])
 
         boxes = torch.as_tensor(boxes, dtype = torch.float32)
         labels = torch.as_tensor(labels, dtype = torch.int64)
@@ -189,8 +195,8 @@ class CustomImageDatasets(Dataset):
 #     def __len__(self):
 #         return len(self.all_images)
 # %%
-train_dataset = CustomImageDatasets(TRAIN_DIR, CLASSES, get_train_transform())
-valid_dataset = CustomImageDatasets(VALID_DIR, CLASSES, get_valid_transform())
+train_dataset = CustomImageDatasets(TRAIN_DIR, CLASSES, RESIZE_TO, RESIZE_TO, get_train_transform())
+valid_dataset = CustomImageDatasets(VALID_DIR, CLASSES, RESIZE_TO, RESIZE_TO, get_valid_transform())
 
 # %%
 train_loader = DataLoader(
