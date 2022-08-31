@@ -31,9 +31,8 @@ class CustomImageDatasets(Dataset):
         image = cv2.imread(image_dir)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB).astype(np.float32)
         image_resized = cv2.resize(image, (self.width, self.height))
-        # TODO: check why this is needed
-        image_resized = image_resized.transpose((2, 0, 1))
-        image_resized = image/255.0
+        #image_resized = image_resized.transpose((2, 0, 1))
+        image_resized /= 255.0
 
         # get label
         annot_name = image_name[:-4] + ".xml"
@@ -90,7 +89,7 @@ class CustomImageDatasets(Dataset):
         sample_image, sample_target = self.__getitem__(idx)
         
         fig, ax = plt.subplots()
-        ax.imshow(sample_image.transpose((1, 2, 0)))
+        ax.imshow(sample_image)
 
         for i in range(len(sample_target["boxes"])):
             box = sample_target["boxes"][i]
@@ -107,8 +106,8 @@ class CustomImageDatasets(Dataset):
         plt.show()
 
 # %%
-train_dataset = CustomImageDatasets(TRAIN_DIR, CLASSES, RESIZE_TO, RESIZE_TO, get_train_transform())
-valid_dataset = CustomImageDatasets(VALID_DIR, CLASSES, RESIZE_TO, RESIZE_TO, get_valid_transform())
+train_dataset = CustomImageDatasets(TRAIN_DIR, CLASSES, RESIZE_TO, RESIZE_TO)
+valid_dataset = CustomImageDatasets(VALID_DIR, CLASSES, RESIZE_TO, RESIZE_TO)
 
 # %%
 train_loader = DataLoader(
@@ -130,3 +129,11 @@ valid_loader = DataLoader(
 # %%
 print(f"Number of training samples: {len(train_dataset)}")
 print(f"Number of validation samples: {len(valid_dataset)}\n")
+
+# %%
+train_dataset.visualize_sample(0)
+
+# %%
+sample_image.transpose((1, 2, 0))
+
+# %%
