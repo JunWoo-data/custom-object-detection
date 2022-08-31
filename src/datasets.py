@@ -106,8 +106,8 @@ class CustomImageDatasets(Dataset):
         plt.show()
 
 # %%
-train_dataset = CustomImageDatasets(TRAIN_DIR, CLASSES, RESIZE_TO, RESIZE_TO)
-valid_dataset = CustomImageDatasets(VALID_DIR, CLASSES, RESIZE_TO, RESIZE_TO)
+train_dataset = CustomImageDatasets(TRAIN_DIR, CLASSES, RESIZE_TO, RESIZE_TO, get_train_transform)
+valid_dataset = CustomImageDatasets(VALID_DIR, CLASSES, RESIZE_TO, RESIZE_TO, get_valid_transform)
 
 # %%
 train_loader = DataLoader(
