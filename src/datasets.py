@@ -212,9 +212,3 @@ valid_loader = DataLoader(
 # %%
 print(f"Number of training samples: {len(train_dataset)}")
 print(f"Number of validation samples: {len(valid_dataset)}\n")
-# %%
-
-import os, sys
-
-os.chdir('/root/custom-object-detection/src')
-# %%
